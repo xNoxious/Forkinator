@@ -1,10 +1,9 @@
-################################
+
                 /)             
                 ((             
          /\_/\   ))  - Meow!   
         ( ^.^ )_//             
         (m) (m)\_)             
-################################
 
 This is an application that gets information about your favourite food recipes. 
 You can read those recipes, add them to your shopping list, or even mark them as favourite.
