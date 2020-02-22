@@ -1,9 +1,9 @@
 ################################
-#               /)             #
-#               ((             #
-#        /\_/\   ))  - Meow!   #
-#       ( ^.^ )_//             #
-#       (m) (m)\_)             #
+                /)             
+                ((             
+         /\_/\   ))  - Meow!   
+        ( ^.^ )_//             
+        (m) (m)\_)             
 ################################
 
 This is an application that gets information about your favourite food recipes. 
