@@ -4,10 +4,21 @@ export const getInput = () => elements.searchInput.value;
 
 export const clearResults = () => {
     elements.searchResultList.innerHTML = '';
+    elements.searchResultPages.innerHTML = '';
 };
 
 export const clearInput = () => {
     elements.searchInput.value = ''; // if it was on same line it does implicit return which we don't want.
+};
+
+export const renderResults = (recipes, page = 1, resultsPerPage = 10) => {
+    // render results of current page
+    const start = (page - 1) * resultsPerPage;
+    const end = page * resultsPerPage;
+    recipes.slice(start, end).forEach(el => renderRecipe(el)); // can also simply put: ...forEach(renderRecipe);
+
+    // render pagination buttons
+    renderButtons(page, recipes.length, resultsPerPage);
 };
 
 /* 'Pasta with tomato and spinach'
@@ -58,10 +69,10 @@ const renderRecipe = (recipe) => {
 const createButton = (pageNumber, type) =>
     `
         <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? pageNumber - 1 : pageNumber + 1}>
+        <span>Page ${type === 'prev' ? pageNumber - 1 : pageNumber + 1}</span>
             <svg class="search__icon">
                 <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
             </svg>
-            <span>Page ${type === 'prev' ? pageNumber - 1 : pageNumber + 1}</span>
         </button>               
     `;
 
@@ -86,14 +97,4 @@ const renderButtons = (page, numberOfResults, resultsPerPage) => {
     }
 
     elements.searchResultPages.insertAdjacentHTML("afterbegin", button);
-};
-
-export const renderResults = (recipes, page = 1, resultsPerPage = 10) => {
-    // render results of current page
-    const start = (page - 1) * resultsPerPage;
-    const end = page * resultsPerPage;
-    recipes.slice(start, end).forEach(el => renderRecipe(el)); // can also simply put: ...forEach(renderRecipe);
-
-    // render pagination buttons
-    renderButtons(page, recipes.length, resultsPerPage);
 };

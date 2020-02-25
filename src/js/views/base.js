@@ -5,7 +5,8 @@ export const elements = {
     searchInput: document.querySelector('.search__field'),
     searchResults: document.querySelector('.results'),
     searchResultList: document.querySelector('.results__list'),
-    searchResultPages: document.querySelector('.results__pages')
+    searchResultPages: document.querySelector('.results__pages'),
+    recipe: document.querySelector('.recipe'),
 };
 
 export const renderLoader = (parent) => {
@@ -20,7 +21,7 @@ export const renderLoader = (parent) => {
 };
 
 export const clearLoader = () => {
-    // can't just use the searchResults directly because by the time this runs, 
+    // can't just use the .lodader element directly because by the time this runs, 
     // searchResults is not yet on the page (it gets on page once we press search)
     const loaderElement = document.querySelector(".loader");
     if (loaderElement) {
