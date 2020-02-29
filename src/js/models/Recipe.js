@@ -57,41 +57,44 @@ export default class Recipe {
                 const arrayCount = arrayIngredient.slice(0, unitIndex);
 
                 let count;
-                if (arrayCount.length === 1) {
-                    if (arrayCount[0] === "") {
-                        count = 1;
-                    } else {
-                        // some recipes show 4-1/2 for example, hence replace and eval are needed.
-                        count = eval(arrayIngredient[0].replace('-', '+'));
-                    }
-                } else {
-                    count = eval(arrayIngredient.slice(0, unitIndex).join('+'));
+                if (arrayCount.length === 1)
+                // { --- this is replaced in recipeView's formatCount method where count is set to '?' so use either.
+                //     // some recipes have no quantity e.g. ' teaspoon of salt'
+                //     if (arrayCount[0] === "") {
+                //         count = 1;
+                //     } else 
+                {
+                    // some recipes show 4-1/2 for example, hence replace and eval are needed.
+                    count = eval(arrayIngredient[0].replace('-', '+'));
                 }
-                objectIngredient = {
-                    count: count,
-                    unit: arrayIngredient[unitIndex],
-                    ingredient: arrayIngredient.slice(unitIndex + 1).join(' ')
-                }
+            } else {
+                count = eval(arrayIngredient.slice(0, unitIndex).join('+'));
+            }
+            objectIngredient = {
+                count: count,
+                unit: arrayIngredient[unitIndex],
+                ingredient: arrayIngredient.slice(unitIndex + 1).join(' ')
+            }
 
-            } else if (parseInt(arrayIngredient[0], 10)) {
-                // no unit but 1st element is number (e.g. 1 bread, not 1 tbsp bread)
-                objectIngredient = {
-                    count: (parseInt(arrayIngredient[0], 10)),
-                    unit: '',
-                    // all but the 0th element which is the count
-                    ingredient: arrayIngredient.slice(1).join(' ')
-                }
+        } else if (parseInt(arrayIngredient[0], 10)) {
+            // no unit but 1st element is number (e.g. 1 bread, not 1 tbsp bread)
+            objectIngredient = {
+                count: (parseInt(arrayIngredient[0], 10)),
+                unit: '',
+                // all but the 0th element which is the count
+                ingredient: arrayIngredient.slice(1).join(' ')
             }
-            else if (unitIndex === -1) {
-                // no unit is present
-                objectIngredient = {
-                    count: 1,
-                    unit: '',
-                    ingredient: ingredient
-                }
+        }
+        else if (unitIndex === -1) {
+            // no unit is present
+            objectIngredient = {
+                count: 1,
+                unit: '',
+                ingredient: ingredient
             }
-            return objectIngredient;
-        });
+        }
+        return objectIngredient;
+    });
 
         this.ingredients = newIngredients;
     };
