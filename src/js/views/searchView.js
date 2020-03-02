@@ -12,7 +12,7 @@ export const highlightSelected = (id) => {
     resultsArray.forEach(el => {
         el.classList.remove('results__link--active');
     });
-    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+    document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
 }
 
 export const clearInput = () => {
@@ -38,7 +38,7 @@ export const renderResults = (recipes, page = 1, resultsPerPage = 10) => {
  * accumulator 18: accumulator + current.length = 18 + 7 = 25 => newTitle = ['Pasta', 'with', 'tomato'] // doesn't pass test => not added
  * FInal array: ['Pasta', 'with', 'tomato']
  */
-const limitRecipeTitle = (title, limit = 17) => {
+export const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = []; // arrays can be const because we are not mutating its structure
     if (title.length > limit) {
         title.split(' ').reduce((accumulator, current) => {

@@ -1,9 +1,11 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import ShoppingList from './models/ShoppingList';
+import { Likes } from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as shoppingListView from './views/shoppingListView';
+import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* Global state of the application
@@ -95,7 +97,10 @@ const controlRecipe = async () => {
 
             // render recipe
             clearLoader();
-            recipeView.renderRecipe(state.recipe);
+            recipeView.renderRecipe(
+                state.recipe,
+                state.likes.isLiked(recipeId)
+            );
         } catch (error) {
             console.log(error);
             alert('Error processing recipe');
@@ -140,6 +145,51 @@ elements.shoppingList.addEventListener('change', e => {
     }
 });
 
+/*
+ * Like Controller
+ */
+// FOR TESTING, TODO: Remove later
+state.likes = new Likes();
+likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
+
+const controlLike = () => {
+    if (!state.likes) {
+        state.likes = new Likes();
+    }
+
+    const currentID = state.recipe.id;
+
+    // user has not yet liked current recipe
+    if (!state.likes.isLiked(currentID)) {
+        // add like to state
+        const newLike = state.likes.addLike(
+            currentID,
+            state.recipe.title,
+            state.recipe.author,
+            state.recipe.img
+        );
+
+        // toggle like button
+        likesView.toggleLikeBtn(true);
+
+        // add like to UI
+        likesView.renderLike(newLike);
+
+        // user has liked current recipe
+    } else {
+        // remove like from state
+        state.likes.deleteLike(currentID);
+
+        // toggle like button
+        likesView.toggleLikeBtn(false);
+
+        // remove like from UI
+        likesView.deleteLike(currentID);
+    }
+
+    likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
+};
+
 // window.addEventListener('hashchange', controlRecipe);
 // window.addEventListener('load', controlRecipe);
 // Below is a nice way to add a bunch of events to the same event listener instead of separate line for each
@@ -160,6 +210,10 @@ elements.recipe.addEventListener('click', e => {
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
     } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+        // add to shopping list
         controlShoppingList();
+    } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+        // add to liked recipes
+        controlLike();
     }
 });
