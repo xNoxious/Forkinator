@@ -1,7 +1,9 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import ShoppingList from './models/ShoppingList';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as shoppingListView from './views/shoppingListView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* Global state of the application
@@ -11,6 +13,7 @@ import { elements, renderLoader, clearLoader } from './views/base';
  * - Liked recipes
  */
 const state = {};
+window.state = state;
 
 /*
  * Search Controller
@@ -73,13 +76,17 @@ const controlRecipe = async () => {
         recipeView.clearRecipe();
         renderLoader(elements.recipe);
 
+        // highlight selected search item
+        if (state.search) {
+            searchView.highlightSelected(recipeId);
+        }
+
         // create new recipe object
         state.recipe = new Recipe(recipeId);
 
         try {
             // get recipe data and parse ingredients
             await state.recipe.getRecipe();
-            console.log(state.recipe);
             state.recipe.parseIngredients();
 
             // calculate servings
@@ -96,8 +103,63 @@ const controlRecipe = async () => {
     }
 };
 
+/*
+ * Shopping List Controller
+ */
+const controlShoppingList = () => {
+    // create new list if there isn't one
+    if (!state.shoppingList) {
+        state.shoppingList = new ShoppingList();
+    }
+
+    // add each ingredient to list
+    state.recipe.ingredients.forEach(el => {
+        const item = state.shoppingList.addItem(el.count, el.unit, el.ingredient);
+        shoppingListView.renderItem(item);
+    });
+};
+
+// Handle delete and update of items in list
+elements.shoppingList.addEventListener('change', e => {
+    const id = e.target.closest('.shopping__item').dataset.itemid; //we named it so in view: data-itemid
+
+    // handle delete button
+    if (e.target.matches('.shopping__delete, .shopping__delete *')) {
+        // delete from state
+        state.shoppingList.deleteItem(id);
+
+        // delete from UI
+        shoppingListView.deleteItem(id);
+
+        // handle count update
+    } else if (e.target.matches('.shopping__count-value')) {
+        const val = parseFloat(e.target.value, 10);
+        if (val >= 0) {
+            state.shoppingList.updateCount(id, val);
+        }
+    }
+});
+
 // window.addEventListener('hashchange', controlRecipe);
 // window.addEventListener('load', controlRecipe);
 // Below is a nice way to add a bunch of events to the same event listener instead of separate line for each
-// 'load' solves issue where someone bookmarks and hash doesn't actually change
+// 'load' solves the issue where someone bookmarks and hash doesn't actually change
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+// handling recipe amount button clicks
+elements.recipe.addEventListener('click', e => {
+    if (e.target.matches('.btn-decrease, .btn-decrease *')) // button or any child
+    {
+        if (state.recipe.servings > 1) {
+            // decrease button is clicked 
+            state.recipe.updateServings('dec');
+            recipeView.updateServingsIngredients(state.recipe);
+        }
+    } else if (e.target.matches('.btn-increase, .btn-increase *')) {
+        // increase button is clicked
+        state.recipe.updateServings('inc');
+        recipeView.updateServingsIngredients(state.recipe);
+    } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+        controlShoppingList();
+    }
+});
