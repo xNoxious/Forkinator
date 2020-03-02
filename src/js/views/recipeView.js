@@ -97,20 +97,33 @@ const formatCount = (count) => {
     if (count) {
         // count = 2.5 => 2 1/2
         // count = 0.5 => 1/2
+
+        /*
+            This is a workaround for external package 'fractional' because it cannot handle
+            odd values like 1.3333333 and it ends up displaying something like 1 3333333333/ 100000000
+            Because Math.round() returns only integers, multiplying it by 10000 and dividing its result by 1000
+            rounds it up to 3 decimal places. If we want more decimals we just add more '0' - so 10000 - 4 decimal places.
+
+            It still returns an ugly result but at this point, as described in the README.md, 
+            it is a problem with the API and fractional library. And it also solves an issue of 
+            the number being too large when increasing servings.
+        */
+        const newCount = Math.round(count * 1000) / 1000;
+
         // destructuring and then need to map because deconstructuring makes them strings
-        const [int, dec] = count.toString().split('.').map(el => parseInt(el, 10));
+        const [int, dec] = newCount.toString().split('.').map(el => parseInt(el, 10));
 
         if (!dec) {
-            return count;
+            return newCount;
         }
 
         if (int === 0) {
-            const fr = new Fraction(count);
+            const fr = new Fraction(newCount);
             return `${fr.numerator}/${fr.denominator}`;
         } else {
             // if we don't do this we get 5/2 for a 2.5 instead of 2 1/2
             // which is still valid, but not what we want
-            const fr = new Fraction(count - int);
+            const fr = new Fraction(newCount - int);
             return `${int} ${fr.numerator}/${fr.denominator}`;
         }
     }

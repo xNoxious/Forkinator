@@ -9,7 +9,7 @@ This is an application that gets information about your favourite food recipes.
 You can read those recipes, add them to your shopping list, or even mark them as favourite.
 
 This application's purpose is to showcase my use of JavaScript together with HTML and CSS. The 3rd party API that the application is calling to fetch the recipes is extremely limited. It is able to return results for
-limited popular searches. Some that I have found are 'pizza', 'bacon', 'cake', 'banana'.
+limited popular searches. Some that I have found are 'coconut', 'pizza', 'bacon', 'cake', 'banana'.
 In the future, the application might be updated to use a complete API with millions of recipes but as it was 
 done for learning purposes its uses are extremely limited.
 
@@ -19,6 +19,15 @@ Technical jibber-jabber:
 The app is written in JavaScript, HTML and CSS. It fetches data from an actual API without any authorization.
 There are additional tools used for the app - Webpack and Babel. 
 Other third party tools: Fractional, uniqid
+
+#####################################################################
+
+Future work:
+
+- Add better error handling
+- Work with a fully-fledged recipes API to offer more recipes
+- Find a better library for parsing fractions (see 'Known issues' below) in case API from 
+  above returns odd values that cannot be processed by 'fractional' library
 
 #####################################################################
 
@@ -35,7 +44,6 @@ As the API is very basic and has a small amount of recipes, there is a plan to u
 a more popular API that has millions of recipes instead of the small one used for this project's purpose.
 
 #####################################################################
-
 
 You need to have node.js installed to get this project up and running.
 
