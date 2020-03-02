@@ -15,7 +15,6 @@ import { elements, renderLoader, clearLoader } from './views/base';
  * - Liked recipes
  */
 const state = {};
-window.state = state;
 
 /*
  * Search Controller
@@ -41,7 +40,6 @@ const controlSearch = async () => {
             clearLoader();
             searchView.renderResults(state.search.result);
         } catch (error) {
-            console.log(error);
             alert('Something went wrong with the search :(');
             clearLoader();
         }
@@ -148,9 +146,6 @@ elements.shoppingList.addEventListener('change', e => {
 /*
  * Like Controller
  */
-// FOR TESTING, TODO: Remove later
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
 
 const controlLike = () => {
     if (!state.likes) {
@@ -175,7 +170,7 @@ const controlLike = () => {
         // add like to UI
         likesView.renderLike(newLike);
 
-        // user has liked current recipe
+    // user has liked current recipe
     } else {
         // remove like from state
         state.likes.deleteLike(currentID);
@@ -195,6 +190,20 @@ const controlLike = () => {
 // Below is a nice way to add a bunch of events to the same event listener instead of separate line for each
 // 'load' solves the issue where someone bookmarks and hash doesn't actually change
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+// Restore liked recipes on page load
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+
+    // read likes from local storage
+    state.likes.readStorage();
+
+    // toggle likes button
+    likesView.toggleLikeMenu(state.likes.getNumberOfLikes());
+
+    // render existing likes 
+    state.likes.likes.forEach(el => likesView.renderLike(el));
+});
 
 // handling recipe amount button clicks
 elements.recipe.addEventListener('click', e => {
