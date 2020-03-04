@@ -8,7 +8,6 @@ export default class Recipe {
     async getRecipe() {
         try {
             const res = await axios(`https://forkify-api.herokuapp.com/api/get?rId=${this.id}`)
-            console.log(res);
             this.title = res.data.recipe.title;
             this.author = res.data.recipe.publisher;
             this.img = res.data.recipe.image_url;
@@ -16,7 +15,9 @@ export default class Recipe {
             this.ingredients = res.data.recipe.ingredients;
         } catch (error) {
             console.log(error);
-            alert('Something went wrong ;(');
+            // commented out because calling code already handles it within a try/catch block 
+            // but showing how it can be used for calls from other places.
+            //alert('Something went wrong with getting the recipe ;(');
         }
     }
 

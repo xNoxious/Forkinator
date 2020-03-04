@@ -40,7 +40,7 @@ const controlSearch = async () => {
             clearLoader();
             searchView.renderResults(state.search.result);
         } catch (error) {
-            alert('Something went wrong with the search :(');
+            alert("There is a problem with getting recipes for your request. Try using something popular like 'pizza' or 'pasta'");
             clearLoader();
         }
     }
@@ -101,7 +101,7 @@ const controlRecipe = async () => {
             );
         } catch (error) {
             console.log(error);
-            alert('Error processing recipe');
+            alert("Error processing your selected recipe");
         }
     }
 };
@@ -170,7 +170,7 @@ const controlLike = () => {
         // add like to UI
         likesView.renderLike(newLike);
 
-    // user has liked current recipe
+        // user has liked current recipe
     } else {
         // remove like from state
         state.likes.deleteLike(currentID);
