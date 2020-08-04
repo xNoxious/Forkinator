@@ -5,6 +5,9 @@
         ( ^.^ )_//             
         (m) (m)\_)             
 
+Yes. A project. How cool? Now pet the cat. Its name is Fluffymuffins.
+
+#Forkinator
 This is an application that gets information about your favourite food recipes. 
 You can read those recipes, add them to your shopping list, or even mark them as favourite.
 
